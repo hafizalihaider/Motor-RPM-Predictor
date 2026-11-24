@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Large datasets
+data/*.csv
+data/*.zip
+data/*.parquet
+
+# Trained models
+models/*.pkl
+models/*.joblib
+models/*.pt
+models/*.pth
+
+# Generated results
+results/
+
+# Environment / IDE
+.env
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
