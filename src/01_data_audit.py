@@ -20,9 +20,7 @@ print(DATA_PATH)
 print(f"\nDataset exists: {DATA_PATH.exists()}")
 
 if not DATA_PATH.exists():
-    raise FileNotFoundError(
-        f"\nDataset not found:\n{DATA_PATH}"
-    )
+    raise FileNotFoundError(f"\nDataset not found:\n{DATA_PATH}")
 
 
 # Load dataset
@@ -81,9 +79,7 @@ missing = df.isnull().sum()
 
 print(missing)
 
-print(
-    f"\nTotal missing values: {missing.sum():,}"
-)
+print(f"\nTotal missing values: {missing.sum():,}")
 
 
 # --------------------------------------------------
@@ -131,19 +127,11 @@ if "profile_id" in df.columns:
     print("8. PROFILE INFORMATION")
     print("=" * 60)
 
-    print(
-        f"Unique profiles: {df['profile_id'].nunique():,}"
-    )
+    print(f"Unique profiles: {df['profile_id'].nunique():,}")
 
     print("\nSamples per profile:")
 
-    print(
-        df["profile_id"]
-        .value_counts()
-        .sort_index()
-        .to_string()
-    )
-
+    print(df["profile_id"].value_counts().sort_index().to_string())
 
 print("\n" + "=" * 60)
 print("AUDIT COMPLETE")
