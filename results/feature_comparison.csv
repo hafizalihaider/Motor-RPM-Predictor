@@ -1,0 +1,3 @@
+Model,Features,MAE,RMSE,R2
+Voltage + Current,"voltage_V, current_A",24.830097541978244,30.780701894256808,0.9988922962822334
+Voltage + Current + Torque,"voltage_V, current_A, torque_Nm",24.644258970658825,30.5385331921428,0.9989096575453302
