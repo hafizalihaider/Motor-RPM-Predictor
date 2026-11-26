@@ -1,22 +1,20 @@
 # Motor RPM Predictor
 
-A machine learning project that predicts DC motor speed (RPM) using voltage and current as input features.
+A Python-based machine learning project that predicts DC motor rotational speed (RPM) using voltage and current measurements.
 
-## 1. Project Overview
+The project includes data generation, exploratory data analysis, model training, visualization, model validation, feature comparison, and a command-line prediction application.
 
-This project uses Python and Scikit-learn to develop and evaluate regression models for motor RPM prediction.
+## Project Objectives
 
-The project includes:
-- Synthetic dataset generation
-- Exploratory data analysis (EDA)
-- Linear Regression model training
-- Random Forest model training
-- Model evaluation and comparison
-- Prediction using new input values
-- Input validation
-- Model persistence using Joblib
+- Generate and analyze a motor measurement dataset.
+- Explore relationships between voltage, current, torque, and RPM.
+- Train machine learning models to predict RPM.
+- Evaluate model performance using regression metrics.
+- Compare models using different input features.
+- Accept new CSV measurement files and generate RPM predictions.
+- Export prediction results to a CSV file.
 
-## 2. Technologies Used
+## Technologies Used
 
 - Python
 - NumPy
@@ -25,16 +23,24 @@ The project includes:
 - Scikit-learn
 - Joblib
 
-## 3. Project Structure
+## Project Structure
 
 ```text
 Motor-RPM-Predictor/
+│
 ├── data/
 │   └── measure.csv
+│
 ├── models/
-│   └── rpm_model.joblib
+│   ├── rpm_model.joblib
+│   └── rpm_model_with_torque.joblib
+│
+├── output/
+│   └── predictions.csv
+│
 ├── results/
-│   └── model_comparison.csv
+│   └── feature_comparison.csv
+│
 ├── src/
 │   ├── 01_data_generation.py
 │   ├── 02_basic_eda.py
@@ -44,29 +50,29 @@ Motor-RPM-Predictor/
 │   ├── 06_model_validation.py
 │   ├── 07_new_data_validation.py
 │   └── 08_model_comparison.py
+│
+├── main.py
+├── requirements.txt
 ├── .gitignore
-├── README.md
-└── requirements.txt
+└── README.md
 ```
 
-The local `.venv/` directory is excluded from version control.
+## Installation
 
-## 4. Installation
-
-### Clone the repository
+### 1. Clone the repository
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
+git clone https://github.com/hafizalihaider/Motor-RPM-Predictor.git
 cd Motor-RPM-Predictor
 ```
 
-### Create a virtual environment
+### 2. Create a virtual environment
 
 ```bash
 python -m venv .venv
 ```
 
-### Activate the virtual environment
+### 3. Activate the environment
 
 Windows PowerShell:
 
@@ -74,104 +80,140 @@ Windows PowerShell:
 .\.venv\Scripts\Activate.ps1
 ```
 
-### Install dependencies
+### 4. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 5. Running the Project
+## Model Training
 
-Run all commands from the project root directory.
+The training script uses the dataset in `data/measure.csv`.
 
-### Generate the dataset
-
-```bash
-python src/01_data_generation.py
-```
-
-### Perform exploratory data analysis
+Run:
 
 ```bash
-python src/02_basic_eda.py
+python .\src\03_train_model.py
 ```
 
-### Train the model
+The script trains and saves two models:
+
+| Model | Input Features |
+|---|---|
+| Model A | Voltage and Current |
+| Model B | Voltage, Current, and Torque |
+
+The trained models are saved in the `models/` directory.
+
+Feature comparison results are saved in `results/feature_comparison.csv`.
+
+## Running the Prediction Application
+
+Run the main application from the project root:
 
 ```bash
-python src/03_train_model.py
+python main.py
 ```
 
-### Visualize model predictions and residuals
+The application asks for a CSV file path.
 
-```bash
-python src/04_model_visualization.py
+- Enter a valid CSV path to predict RPM from new measurements.
+- Press Enter to use the default dataset, `data/measure.csv`.
+
+### Input CSV Format
+
+The application requires these two columns:
+
+| Column | Description | Unit |
+|---|---|---|
+| `voltage_V` | Motor supply voltage | Volts |
+| `current_A` | Motor current | Amperes |
+
+An optional `rpm` column can be included when actual RPM measurements are available. The application uses it to evaluate predictions; it is not used as a prediction input.
+
+Example:
+
+```csv
+voltage_V,current_A,rpm
+12,3,1850
+12,8,900
+24,3,3900
+18,5,2600
+9,2,1200
 ```
 
-### Predict motor RPM
+The example values are illustrative, not verified motor measurements.
 
-```bash
-python src/05_predict_rpm.py
+### Application Workflow
+
+1. Checks that the required files exist.
+2. Reads the selected CSV file.
+3. Validates required columns and measurement values.
+4. Checks input values against the training dataset's individual feature ranges.
+5. Loads the trained regression model.
+6. Predicts RPM.
+7. Evaluates predictions if actual RPM values are supplied.
+8. Saves the results to `output/predictions.csv`.
+
+### Output
+
+The application preserves the input data and adds a new column:
+
+`predicted_RPM`
+
+The output file is:
+
+```text
+output/predictions.csv
 ```
 
-The prediction interface accepts voltage and current values and checks that inputs are numeric, non-negative, and within the observed dataset ranges.
+When actual RPM is supplied, the application reports:
 
-### Validate the saved model
+- Mean Absolute Error (MAE)
+- Root Mean Squared Error (RMSE)
+- Mean Error
 
-```bash
-python src/06_model_validation.py
-```
+## Model Evaluation
 
-### Test predictions with new data
+The Linear Regression model was evaluated on a held-out test set containing 400 samples.
 
-```bash
-python src/07_new_data_validation.py
-```
+| Metric | Result |
+|---|---:|
+| MAE | 24.83 RPM |
+| RMSE | 30.78 RPM |
+| R² Score | 0.99889 |
 
-### Compare regression models
+The dataset was divided into 80% training data and 20% testing data using `random_state=42`.
 
-```bash
-python src/08_model_comparison.py
-```
+These results describe performance on the held-out portion of the generated dataset. They do not establish accuracy on real motors.
 
-## 6. Model Performance
+## Scientific Limitations
 
-Two regression algorithms were evaluated using the same train-test split.
+**The current dataset is synthetic.**
 
-| Model | MAE (RPM) | RMSE (RPM) | R² |
-|---|---:|---:|---:|
-| Linear Regression | 24.83 | 30.78 | 0.99889 |
-| Random Forest | 35.85 | 46.85 | 0.99743 |
+It was generated using simplified steady-state brushed DC motor equations and assumed motor parameters. These parameters are educational assumptions, not experimentally measured values or verified manufacturer specifications.
 
-Linear Regression achieved lower MAE and RMSE and a higher R² score on this test split.
+The model therefore learns relationships within this simulated dataset. Its high R² score should not be interpreted as evidence of equivalent accuracy on real motor measurements.
 
-### Evaluation Metrics
+Additional limitations include:
 
-- **MAE:** Mean Absolute Error measures the average absolute difference between actual and predicted RPM.
-- **RMSE:** Root Mean Squared Error penalizes larger prediction errors more heavily.
-- **R²:** Measures how much of the variation in the test target values is explained by the model.
+- The model does not account for every real motor operating condition.
+- Current and torque are strongly correlated in the generated dataset.
+- Individual input range checks do not guarantee that a voltage-current combination is physically realistic.
+- Independent experimental measurements are required to evaluate real-world predictive performance.
 
-## 7. Dataset and Model Limitations
+## Future Improvements
 
-- The dataset is synthetically generated rather than collected through physical motor experiments.
-- Motor parameters used during generation are assumed educational values, not experimentally measured constants.
-- The high evaluation scores reflect the mathematical structure of the synthetic dataset.
-- Testing against the same underlying theoretical equations does not establish real-world accuracy.
-- Predictions should not be used for physical motor control or safety-critical applications without independent experimental validation.
+- Evaluate the model using experimentally collected motor data.
+- Investigate prediction errors under different operating conditions.
+- Improve input validation using physically meaningful constraints.
+- Compare additional regression algorithms.
+- Assess model performance on independent datasets.
 
-## 8. Current Project Status
-
-The software implementation includes dataset generation, exploratory analysis, model training, evaluation, visualization, model comparison, prediction, and input validation.
-
-Future improvements should focus on:
-- Collecting real motor measurement data.
-- Testing on independent experimental datasets.
-- Applying cross-validation.
-- Evaluating prediction uncertainty.
-- Improving generalization to unseen operating conditions.
-
-## 9. Author
+## Author
 
 **Muhammad Ali Haider**
 
-GitHub: [Add your GitHub profile URL here]
+GitHub: [hafizalihaider](https://github.com/hafizalihaider)
+
+Repository: [Motor-RPM-Predictor](https://github.com/hafizalihaider/Motor-RPM-Predictor)
