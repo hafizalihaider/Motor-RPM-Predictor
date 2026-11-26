@@ -2,17 +2,21 @@
 
 A machine learning project that predicts DC motor speed (RPM) using voltage and current as input features.
 
-## Project Overview
+## 1. Project Overview
 
-This project uses Python and Scikit-learn to train and evaluate regression models for RPM prediction.
+This project uses Python and Scikit-learn to develop and evaluate regression models for motor RPM prediction.
 
-Two models are compared:
-- Linear Regression
-- Random Forest Regressor
+The project includes:
+- Synthetic dataset generation
+- Exploratory data analysis (EDA)
+- Linear Regression model training
+- Random Forest model training
+- Model evaluation and comparison
+- Prediction using new input values
+- Input validation
+- Model persistence using Joblib
 
-Linear Regression currently performs better on the project's test split.
-
-## Technologies Used
+## 2. Technologies Used
 
 - Python
 - NumPy
@@ -21,7 +25,7 @@ Linear Regression currently performs better on the project's test split.
 - Scikit-learn
 - Joblib
 
-## Project Structure
+## 3. Project Structure
 
 ```text
 Motor-RPM-Predictor/
@@ -40,61 +44,134 @@ Motor-RPM-Predictor/
 │   ├── 06_model_validation.py
 │   ├── 07_new_data_validation.py
 │   └── 08_model_comparison.py
-└── README.md
+├── .gitignore
+├── README.md
+└── requirements.txt
 ```
 
-## Installation
+The local `.venv/` directory is excluded from version control.
 
-Install the required packages:
+## 4. Installation
+
+### Clone the repository
+
+```bash
+git clone YOUR_GITHUB_REPOSITORY_URL
+cd Motor-RPM-Predictor
+```
+
+### Create a virtual environment
+
+```bash
+python -m venv .venv
+```
+
+### Activate the virtual environment
+
+Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+### Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Running the Project
+## 5. Running the Project
 
-Run scripts from the project root directory.
+Run all commands from the project root directory.
 
-Generate the dataset:
+### Generate the dataset
 
 ```bash
 python src/01_data_generation.py
 ```
 
-Train the model:
+### Perform exploratory data analysis
+
+```bash
+python src/02_basic_eda.py
+```
+
+### Train the model
 
 ```bash
 python src/03_train_model.py
 ```
 
-Run the prediction interface:
+### Visualize model predictions and residuals
+
+```bash
+python src/04_model_visualization.py
+```
+
+### Predict motor RPM
 
 ```bash
 python src/05_predict_rpm.py
 ```
 
-Compare models:
+The prediction interface accepts voltage and current values and checks that inputs are numeric, non-negative, and within the observed dataset ranges.
+
+### Validate the saved model
+
+```bash
+python src/06_model_validation.py
+```
+
+### Test predictions with new data
+
+```bash
+python src/07_new_data_validation.py
+```
+
+### Compare regression models
 
 ```bash
 python src/08_model_comparison.py
 ```
 
-## Model Performance
+## 6. Model Performance
+
+Two regression algorithms were evaluated using the same train-test split.
 
 | Model | MAE (RPM) | RMSE (RPM) | R² |
 |---|---:|---:|---:|
 | Linear Regression | 24.83 | 30.78 | 0.99889 |
 | Random Forest | 35.85 | 46.85 | 0.99743 |
 
-These metrics are from one train-test split using the generated dataset.
+Linear Regression achieved lower MAE and RMSE and a higher R² score on this test split.
 
-## Important Limitations
+### Evaluation Metrics
 
-- The dataset is synthetically generated, not collected from physical motor experiments.
-- The assumed motor parameters are educational assumptions, not experimentally measured constants.
-- High test performance does not establish real-world prediction accuracy.
-- The model should not be used for physical motor control or safety-critical decisions without independent experimental validation.
+- **MAE:** Mean Absolute Error measures the average absolute difference between actual and predicted RPM.
+- **RMSE:** Root Mean Squared Error penalizes larger prediction errors more heavily.
+- **R²:** Measures how much of the variation in the test target values is explained by the model.
 
-## Current Status
+## 7. Dataset and Model Limitations
 
-Software implementation, model comparison, prediction interface, and input validation are complete. Further work should focus on independent experimental data and rigorous model validation.
+- The dataset is synthetically generated rather than collected through physical motor experiments.
+- Motor parameters used during generation are assumed educational values, not experimentally measured constants.
+- The high evaluation scores reflect the mathematical structure of the synthetic dataset.
+- Testing against the same underlying theoretical equations does not establish real-world accuracy.
+- Predictions should not be used for physical motor control or safety-critical applications without independent experimental validation.
+
+## 8. Current Project Status
+
+The software implementation includes dataset generation, exploratory analysis, model training, evaluation, visualization, model comparison, prediction, and input validation.
+
+Future improvements should focus on:
+- Collecting real motor measurement data.
+- Testing on independent experimental datasets.
+- Applying cross-validation.
+- Evaluating prediction uncertainty.
+- Improving generalization to unseen operating conditions.
+
+## 9. Author
+
+**Muhammad Ali Haider**
+
+GitHub: [Add your GitHub profile URL here]
