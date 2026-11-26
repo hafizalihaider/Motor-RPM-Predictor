@@ -62,7 +62,7 @@ Motor-RPM-Predictor/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/hafizalihaider/Motor-RPM-Predictor.git
+git clone https://github.com/hafizalihaider/Motor-RPM-Predictor
 cd Motor-RPM-Predictor
 ```
 
